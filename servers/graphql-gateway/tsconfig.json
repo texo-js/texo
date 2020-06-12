@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "./src",
+    "outDir": "./lib"
+  },
+
+  "include": [
+    "./src/**/*"
+  ],
+
+  "exclude": [
+    "./src/**/*.test.ts"
+  ],
+
+  "references": [
+    { "path": "../../common/logging" },
+    { "path": "../../common/server-shared" }
+  ]
+}

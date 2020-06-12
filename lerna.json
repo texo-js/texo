@@ -1,0 +1,21 @@
+{
+  "lerna": "latest",
+  "packages": [
+    "common/*",
+    "clients/*",
+    "examples/*",
+    "servers/*",
+    "tools/*"
+  ],
+  "version": "0.0.0",
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "command": {
+    "publish": {
+       "conventionalCommits": true
+    },
+    "version": {
+      "conventionalCommits": true
+    }
+}
+}
