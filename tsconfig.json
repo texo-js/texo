@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+
+  "compilerOptions": {
+    "composite": true
+  },
+
+  "files": [],
+
+  "references": [
+    { "path": "./common/logging/" },
+    { "path": "./common/server-shared/" },
+    { "path": "./servers/graphql-gateway" },
+    { "path": "./servers/graphql-schema" }
+  ]
+}

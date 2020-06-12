@@ -1,0 +1,41 @@
+{
+  "name": "@texo/server-shared",
+  "version": "0.0.0",
+  "description": "Logging extensions for namespaced logging and filtering.",
+  "author": "Texo Authors <texo@defize.co.uk>",
+  "homepage": "https://github.com/compile-this/texo/tree/master/api/gateway#readme",
+  "license": "MIT",
+  "type": "module",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    "import": "./lib/index.js"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/compile-this/texo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/compile-this/texo/issues"
+  },
+  "devDependencies": {
+    "@types/koa__router": "^8.0.2",
+    "@types/triple-beam": "^1.3.0",
+    "@types/uuid": "^8.0.0",
+    "winston-transport": "^4.3.0"
+  },
+  "dependencies": {
+    "@koa/router": "^8.0.8",
+    "@texo/logging": "*",
+    "apollo-server-plugin-base": "^0.9.0",
+    "graphql": "^14.0.0",
+    "uuid": "^8.1.0"
+  }
+}

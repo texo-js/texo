@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "engines": {},
+  "name": "@texo/texo",
+  "description": "A framework for building and composing micro-frontends using React and GraphQL.",
+  "workspaces": [
+    "common/*",
+    "clients/*",
+    "examples/*",
+    "servers/*",
+    "tools/*"
+  ],
+  "scripts": {
+    "clean": "tsc --build --clean",
+    "build": "tsc --build",
+    "test": "jest",
+    "watch": "tsc --build --watch",
+    "release": "echo configure this!",
+    "publish": "echo configure this!"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.1",
+    "@babel/preset-env": "^7.10.2",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^14.0.1",
+    "babel-jest": "^26.0.1",
+    "eslint": "^7.0.0",
+    "jest": "^26.0.1",
+    "lerna": "^3.20.2",
+    "ts-jest": "^26.0.0",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.2"
+  }
+}
