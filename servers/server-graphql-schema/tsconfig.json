@@ -17,6 +17,6 @@
 
   "references": [
     { "path": "../../common/logging" },
-    { "path": "../../common/server-shared" }
+    { "path": "../server-common" }
   ]
 }

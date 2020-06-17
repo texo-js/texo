@@ -3,13 +3,14 @@
     "incremental": true,
     "declaration": true,
     "declarationMap": true,
-    "lib": [ "ES2020" ],
-    "target": "ES2020",
+    "lib": [ "ES2019" ],
+    "target": "ES2019",
+    "module": "ES2015",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "strict": true,
-    "types": [ "jest" ],
+    "types": [ "jest", "node" ]
   },
 
  "exclude": [

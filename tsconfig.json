@@ -9,8 +9,8 @@
 
   "references": [
     { "path": "./common/logging/" },
-    { "path": "./common/server-shared/" },
-    { "path": "./servers/graphql-gateway" },
-    { "path": "./servers/graphql-schema" }
+    { "path": "./servers/server-common" },
+    { "path": "./servers/server-graphql-gateway" },
+    { "path": "./servers/server-graphql-schema" }
   ]
 }

@@ -4,7 +4,7 @@ import apolloGateway, { GraphQLDataSource } from '@apollo/gateway';
 import apolloFederation from '@apollo/federation';
 import { GraphQLRequest, WithRequired, GraphQLResponse, GraphQLRequestContext } from 'apollo-server-types';
 
-import { ServerMetadata, MetadataRouter, printWelcome, ServerType, logger, setLogger, createApolloLogger } from '@texo/server-shared';
+import { ServerMetadata, MetadataRouter, printWelcome, ServerType, logger, setLogger, createApolloLogger } from '@texo/server-common';
 
 import { GatewayServerConfig } from './gateway-server-config';
 import { GraphQLSchema } from 'graphql';

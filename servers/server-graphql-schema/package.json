@@ -36,7 +36,7 @@
   "dependencies": {
     "@apollo/federation": "^0.16.0",
     "@texo/logging": "*",
-    "@texo/server-shared": "*",
+    "@texo/server-common": "*",
     "apollo-graphql": "^0.4.4",
     "apollo-server-koa": "^2.13.1",
     "fast-json-stable-stringify": "^2.1.0",

@@ -14,7 +14,7 @@ describe('namespaces are included in log output',  function () {
     });
 
     transport.log = mock;
-    logger.debug('hello');
+    logger.debug('hello'); 
 
     const log = mock.mock.calls[0][0];
 

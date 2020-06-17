@@ -5,7 +5,7 @@ import graphql, { GraphQLSchema } from 'graphql';
 import stringify from 'fast-json-stable-stringify';
 import { createHash } from 'crypto';
 
-import { ServerMetadata, MetadataRouter, printWelcome, ServerType, logger, setLogger, createApolloLogger } from '@texo/server-shared';
+import { ServerMetadata, MetadataRouter, printWelcome, ServerType, logger, setLogger, createApolloLogger } from '@texo/server-common';
 
 import { SchemaServerConfig } from './schema-server-config';
 
