@@ -1,7 +1,7 @@
 {
-  "name": "@texo/graphql-gateway",
+  "name": "@texo/server-graphql-gateway",
   "version": "0.0.0",
-  "description": "Logging extensions for namespaced logging and filtering.",
+  "description": "",
   "author": "Texo Authors <texo@defize.co.uk>",
   "homepage": "https://github.com/compile-this/texo/tree/master/api/gateway#readme",
   "license": "MIT",

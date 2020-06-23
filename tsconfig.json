@@ -8,9 +8,7 @@
   "files": [],
 
   "references": [
-    { "path": "./common/logging/" },
-    { "path": "./servers/server-common" },
-    { "path": "./servers/server-graphql-gateway" },
-    { "path": "./servers/server-graphql-schema" }
+    { "path": "./common/" },
+    { "path": "./servers/" }
   ]
 }

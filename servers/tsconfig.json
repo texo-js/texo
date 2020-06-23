@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.base.json",
+
+  "compilerOptions": {
+    "composite": true
+  },
+
+  "files": [],
+
+  "references": [
+    { "path": "./server-common" },
+    { "path": "./server-graphql-gateway" },
+    { "path": "./server-graphql-schema" },
+    { "path": "./server-identity-gatekeeper" }
+  ]
+}

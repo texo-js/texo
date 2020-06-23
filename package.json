@@ -27,8 +27,21 @@
     "babel-jest": "^26.0.1",
     "eslint": "^7.0.0",
     "jest": "^26.0.1",
+    "jest-cli": "^26.0.1",
     "lerna": "^3.20.2",
     "ts-jest": "^26.0.0",
     "typescript": "^3.9.2"
+  },
+  "jest": {
+    "preset": "ts-jest/presets/js-with-babel",
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": [ "/node_modules/", "/lib/" ],
+    "coverageDirectory": "coverage",
+    "globals": {
+      "ts-jest": {
+        "packageJson": "package.json"
+      }
+    }
   }
 }

@@ -1,7 +1,7 @@
 {
-  "name": "@texo/server-graphql-schema",
+  "name": "@texo/configurer",
   "version": "0.0.0",
-  "description": "",
+  "description": "Configuration module for configuring applications from commandline or environment variables.",
   "author": "Texo Authors <texo@defize.co.uk>",
   "homepage": "https://github.com/compile-this/texo/tree/master/api/gateway#readme",
   "license": "MIT",
@@ -22,24 +22,20 @@
     "type": "git",
     "url": "git+https://github.com/compile-this/texo.git"
   },
-  "scripts": {
-    "build": "rollup -c",
-    "watch": "rollup -cw",
-    "test": "jest"
-  },
   "bugs": {
     "url": "https://github.com/compile-this/texo/issues"
   },
   "devDependencies": {
-    "@types/koa": "^2.11.3"
+    "@types/chalk": "^2.2.0",
+    "@types/figlet": "^1.2.0",
+    "@types/triple-beam": "^1.3.0",
+    "@types/yargs": "^15.0.5"
   },
   "dependencies": {
-    "@apollo/federation": "^0.16.0",
-    "@texo/logging": "*",
-    "@texo/server-common": "*",
-    "apollo-graphql": "^0.4.4",
-    "apollo-server-koa": "^2.13.1",
-    "fast-json-stable-stringify": "^2.1.0",
-    "graphql": "^14.0.0"
+    "dotenv": "^8.2.0",
+    "triple-beam": "^1.3.0",
+    "winston": "^3.2.1",
+    "winston-transport": "^4.3.0",
+    "yargs": "^15.3.1"
   }
 }

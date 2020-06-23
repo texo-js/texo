@@ -1,7 +1,7 @@
 {
-  "name": "@texo/server-graphql-schema",
+  "name": "@texo/server-identity-gatekeeper",
   "version": "0.0.0",
-  "description": "",
+  "description": "Authentication mechanism abstraction and token provider.",
   "author": "Texo Authors <texo@defize.co.uk>",
   "homepage": "https://github.com/compile-this/texo/tree/master/api/gateway#readme",
   "license": "MIT",
@@ -40,6 +40,7 @@
     "apollo-graphql": "^0.4.4",
     "apollo-server-koa": "^2.13.1",
     "fast-json-stable-stringify": "^2.1.0",
-    "graphql": "^14.0.0"
+    "graphql": "^14.0.0",
+    "jose": "^1.27.1"
   }
 }

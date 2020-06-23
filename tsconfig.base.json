@@ -11,9 +11,5 @@
     "moduleResolution": "node",
     "strict": true,
     "types": [ "jest", "node" ]
-  },
-
- "exclude": [
-   "*.test.tsx?"
- ]
+  }
 }

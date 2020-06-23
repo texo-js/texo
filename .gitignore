@@ -1,3 +1,4 @@
 tsconfig.tsbuildinfo
 lib/
 node_modules/
+coverage/

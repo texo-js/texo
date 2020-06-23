@@ -45,7 +45,7 @@ describe('namespaces are included in log output',  function () {
   });
 });
 
-describe('namespace filters are appied to log entries', () => {
+describe('namespace filters are applied to log entries', () => {
   test('exact filter matches are allowed', function () {
     const filters = new NamespaceFilters('debug', 'TEXO:APOLLO');
     const transport = new VoidTransport();
@@ -67,7 +67,7 @@ describe('namespace filters are appied to log entries', () => {
     expect(log.ns).toBe('TEXO:APOLLO');
   });
 
-  test('exact filter misses are suppressed', function () {
+  test('exact filter misses are suppressed', function () { 
     const filters = new NamespaceFilters('debug', 'TEXO:APOLLO');
     const transport = new VoidTransport();
     const mock = jest.fn();
