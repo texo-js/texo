@@ -6,11 +6,14 @@ import { ServerMetadata } from './server-metadata';
 export function printWelcome(title: string, metadata: ServerMetadata, width: number = 80) {
   const titleFigure = figlet.textSync(title!);
   const titleLines = titleFigure.split('\n');
+
+  const { applicationName, applicationVersion, serverType, texoVersion, ...attributes } = metadata;
+
   const metaFields = [
-    { name: 'App Name', value: metadata.applicationName },
-    { name: 'App Version', value: metadata.applicationVersion },
-    { name: 'App Type', value: metadata.serverType },
-    { name: 'Texo Version', value: metadata.applicationName }
+    { name: 'App Name', value: applicationName },
+    { name: 'App Version', value: applicationVersion },
+    { name: 'App Type', value: serverType || '<unknown>'},
+    { name: 'Texo Version', value: texoVersion || '<unknown>' }
   ];
 
   const lineCountDifference = Math.abs(titleLines.length - metaFields.length);
@@ -19,7 +22,6 @@ export function printWelcome(title: string, metadata: ServerMetadata, width: num
   
   const nameLines = metaFields.map(attribute => attribute.name);
   const valueLines = metaFields.map(attribute => attribute.value);
-
 
   const maxNameLength = calculateMaximumLength(nameLines);
   const maxValueLength = calculateMaximumLength(valueLines);
@@ -56,9 +58,9 @@ export function printWelcome(title: string, metadata: ServerMetadata, width: num
   // Attributes
   const lines: string[] = [];
   lines.push('');
-  metadata.attributes.forEach(attribute => { 
-    lines.push(`${attribute.name}: ${chalk.whiteBright(attribute.value)}`)
-  })
+  Object.entries(attributes).forEach(([ name, value ]) => { 
+    lines.push(`${name}: ${chalk.whiteBright(value)}`)
+  });
   lines.push('');
   console.info(lines.join('\n'));
 

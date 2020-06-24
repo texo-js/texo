@@ -1,5 +1,5 @@
 export * from './gateway-server';
-export * from './gateway-server-config';
+export * from './gateway-server-options';
 export * from './graphql-modules';
 
 export { GraphQLSchemaModule } from 'apollo-graphql';

@@ -6,11 +6,12 @@ import { GraphQLRequest, WithRequired, GraphQLResponse, GraphQLRequestContext } 
 
 import { ServerMetadata, MetadataRouter, printWelcome, ServerType, logger, setLogger, createApolloLogger } from '@texo/server-common';
 
-import { GatewayServerConfig } from './gateway-server-config';
+import { GatewayServerOptions } from './gateway-server-options';
 import { GraphQLSchema } from 'graphql';
 import { IGraphQLModuleDefinition, IHttpGraphQLModuleDefinition, GraphQLModuleDefinitionType, ILocalGraphQLModuleDefinition, LocalGraphQLModuleDefinition } from './graphql-modules';
 import { URL } from 'url';
 import configurationSchema from './schemas/configuration';
+import { NamespacedLogger } from '@texo/logging';
 
 const { ApolloServer } = apollo;
 const { ApolloGateway, RemoteGraphQLDataSource, LocalGraphQLDataSource } = apolloGateway;
@@ -20,42 +21,37 @@ export class GatewayServer {
 
   private app: Koa;
   private metadata: ServerMetadata;
+  private options: GatewayServerOptions
 
-  constructor(config: GatewayServerConfig) {
-    setLogger(config.logger.ns('TEXO'));
+  constructor({ options, metadata, modules, rootLogger }: { options: GatewayServerOptions, metadata: ServerMetadata, modules: IGraphQLModuleDefinition[], rootLogger?: NamespacedLogger }) {
+    setLogger((rootLogger || logger).ns('TEXO'));
 
-    const app = new Koa();
+    this.options = options;
+    this.metadata = { ...metadata, serverType: ServerType.GATEWAY_SERVER, texoVersion: '%{{TEXO_VERSION}}'}
 
-    const metadata: ServerMetadata = {
-      applicationName: config.applicationName,
-      applicationVersion: config.applicationVersion,
-      serverType: ServerType.GATEWAY_SERVER,
-      texoVersion: '%{TEXO_VERSION}',
-      attributes: []
-    } 
+    this.app = new Koa();
+    this.initialiseServices();
+    this.initialiseGateway(modules);
 
-    this.initialiseServices(app, metadata);
-    this.initialiseGateway(app, metadata, config);
-
-    this.app = app;
-    this.metadata = metadata;
-
-    printWelcome('Texo', metadata);
+    printWelcome('Texo', this.metadata);
   }
 
   public listen(config: { port: number }) : void {
     this.app.listen(config.port);
   }
 
-  private initialiseServices(app: Koa, metadata: ServerMetadata) : void {
-    const router = new MetadataRouter(metadata);
+  private initialiseServices() : void {
+    const app = this.app;
+
+    const router = new MetadataRouter(this.metadata);
 
     app.use(router.routes())
     app.use(router.allowedMethods());
   }
 
-  private initialiseGateway(app: Koa, metadata: ServerMetadata, config: GatewayServerConfig) : void {
-    const serviceList: Record<string, ServiceDefinition> = this.buildServiceList(config.modules);
+  private initialiseGateway(modules: IGraphQLModuleDefinition[]) : void {
+    const app = this.app;
+    const serviceList: Record<string, ServiceDefinition> = this.buildServiceList(modules);
 
     const gateway = new ApolloGateway({
       serviceList: Object.values(serviceList),

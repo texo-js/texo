@@ -1,5 +1,5 @@
 export * from './schema-server';
-export * from './schema-server-config';
+export * from './schema-server-options';
 
 export { GraphQLSchemaModule } from 'apollo-graphql';
 

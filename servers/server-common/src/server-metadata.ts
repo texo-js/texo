@@ -1,7 +1,6 @@
-export interface ServerMetadata {
+export interface ServerMetadata extends Record<string, string | undefined> {
   applicationName: string;
   applicationVersion: string;
-  serverType: string;
-  texoVersion: string;
-  attributes: { name: string, value: string }[]
+  serverType?: string;
+  texoVersion?: string;
 }
