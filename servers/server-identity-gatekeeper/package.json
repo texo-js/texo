@@ -35,7 +35,6 @@
   },
   "dependencies": {
     "@texo/configurer": "*",
-    "@texo/logging": "*",
     "@texo/server-common": "*",
     "jose": "^1.27.1",
     "koa": "^2.13.0"

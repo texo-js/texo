@@ -1,11 +1,11 @@
 import { ApolloServerPlugin, GraphQLRequestContext, GraphQLServiceContext } from 'apollo-server-plugin-base';
-import { NamespacedLogger } from '@texo/logging'
+import { Logger, Loggers } from '@texo/logging'
 import { v4 as uuid } from 'uuid';
 
 export const APOLLO_NAMESPACE = 'APOLLO';
 
-export function createApolloLogger(parentLogger: NamespacedLogger) : ApolloServerPlugin {
-  const logger = parentLogger.ns(APOLLO_NAMESPACE);
+export function createApolloLogger(parentLogger: Logger) : ApolloServerPlugin {
+  const logger = Loggers.createChild({ parent: parentLogger, namespace: APOLLO_NAMESPACE });
 
   return {
     serverWillStart(service: GraphQLServiceContext) {

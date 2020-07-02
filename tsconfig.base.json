@@ -3,13 +3,13 @@
     "incremental": true,
     "declaration": true,
     "declarationMap": true,
+    "sourceMap": true,
     "lib": [ "ES2019" ],
     "target": "ES2019",
     "module": "ES2015",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "strict": true,
-    "types": [ "jest", "node" ]
+    "strict": true
   }
 }

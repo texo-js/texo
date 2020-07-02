@@ -5,10 +5,9 @@ import graphql, { GraphQLSchema } from 'graphql';
 import stringify from 'fast-json-stable-stringify';
 import { createHash } from 'crypto';
 
-import { ServerMetadata, MetadataRouter, printWelcome, ServerType, logger, setLogger, createApolloLogger } from '@texo/server-common';
+import { ServerMetadata, MetadataRouter, printWelcome, ServerType, getSystemLogger, createApolloLogger, Logger, Loggers } from '@texo/server-common';
 
 import { SchemaServerOptions } from './schema-server-options';
-import { NamespacedLogger } from '@texo/logging';
 import { GraphQLSchemaModule } from '.';
 
 const { ApolloServer } = apollo;
@@ -20,9 +19,10 @@ export class SchemaServer {
   private app: Koa;
   private metadata: ServerMetadata;
   private options: SchemaServerOptions;
+  private logger: Logger;
 
-  constructor({ options, metadata, modules, rootLogger }: { options: SchemaServerOptions, metadata: ServerMetadata, modules: GraphQLSchemaModule[], rootLogger?: NamespacedLogger }) {
-    setLogger((rootLogger || logger).ns('TEXO'));
+  constructor({ options, metadata, modules }: { options: SchemaServerOptions, metadata: ServerMetadata, modules: GraphQLSchemaModule[] }) {
+    this.logger = Loggers.createChild({ parent: getSystemLogger(), namespace: 'TEXO' });
 
     this.options = options;
     this.metadata = { ...metadata, serverType: ServerType.SCHEMA_SERVER, texoVersion: '%{{TEXO_VERSION}}' };
@@ -57,7 +57,7 @@ export class SchemaServer {
     const server = new ApolloServer({
       schema,
       plugins: [
-        createApolloLogger(logger)
+        createApolloLogger(this.logger)
       ]
     });
 

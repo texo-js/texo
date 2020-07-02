@@ -10,7 +10,10 @@
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "exports": {
-    "import": "./lib/index.js"
+    "import": "./lib/index.js",
+    "/configurer": {
+      "import": "./lib/configurer/index.js"
+    }
   },
   "directories": {
     "lib": "lib"
@@ -31,7 +34,6 @@
   "dependencies": {
     "@apollo/federation": "^0.16.0",
     "@apollo/gateway": "^0.16.0",
-    "@texo/logging": "*",
     "@texo/server-common": "*",
     "@texo/configurer": "*",
     "apollo-graphql": "^0.4.4",

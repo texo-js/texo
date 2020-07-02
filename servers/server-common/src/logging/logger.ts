@@ -1,25 +1,55 @@
-import { NamespacedLogger, createLogger, NamespaceFilters, transports, format } from '@texo/logging';
+import { EOL } from 'os';
 
-let _logger: NamespacedLogger = createDefaultServerLogger();
+import { Logger, Loggers, transports, format, Filters, Format, NamespaceSet } from '@texo/logging';
 
-function setLogger(logger: NamespacedLogger) {
-  _logger = logger;
-}
+namespace Defaults {
+  let _defaultLogger: Logger;
 
-function createDefaultServerLogger() : NamespacedLogger {
-  const consoleFormat = format.combine(
-    format.colorize(),
+  export const DefaultNamespaceSet = new NamespaceSet();
+
+  export const DefaultConsoleFormat: Format = format.combine(
+    Filters.create({ filterLevel: 'info', namespaces: DefaultNamespaceSet }),
     format.timestamp(),
-    format.metadata({fillExcept: [ 'level', 'ns', 'timestamp', 'message' ]}),
-    format.printf(info => `${info.level} ${info.timestamp} ${info.ns} ${info.message} ${JSON.stringify(info.metadata)}`)
+    format.colorize({ level: true, all: false, message: false }),
+    format.metadata({ fillExcept: [ 'level', 'ns', 'timestamp', 'message' ] }),
+    format.printf(info => `${info.timestamp} ${info.level} [${info.ns}] ${info.message}${EOL}${JSON.stringify(info.metadata)}`)
   );
 
-  const filters = new NamespaceFilters('debug', '*');
-  return createLogger('ROOT', filters, {
-    level: 'debug',
-    format: consoleFormat,
-    transports: [ new transports.Console() ]
-  });
+  export function getDefaultLogger() : Logger {
+    if (!_defaultLogger) {
+      _defaultLogger = createDefaultLogger();
+    }
+  
+    return _defaultLogger;
+  }
+
+  function createDefaultLogger() : Logger {
+    return Loggers.create({ options: { level: 'debug', format: DefaultConsoleFormat, transports: transports.Console  } })
+  }
 }
 
-export { _logger as logger, setLogger };
+let _systemLogger: Logger;
+
+function getSystemLogger() : Logger {
+  if (!_systemLogger) {
+    _systemLogger = Defaults.getDefaultLogger();
+  }
+
+  return _systemLogger;
+}
+
+function setSystemLogger(logger: Logger) {
+  _systemLogger = logger;
+}
+
+export {
+  Logger,
+  Loggers,
+  Filters,
+  NamespaceSet,
+  Defaults,
+  format as Formats,
+  transports as Transports,
+  getSystemLogger,
+  setSystemLogger
+};

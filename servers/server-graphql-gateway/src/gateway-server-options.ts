@@ -1,3 +1,3 @@
 export interface GatewayServerOptions {
-  name: string; 
+  accessTokenJwksUrl: string;
 }

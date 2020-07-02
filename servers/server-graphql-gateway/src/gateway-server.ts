@@ -4,14 +4,13 @@ import apolloGateway, { GraphQLDataSource } from '@apollo/gateway';
 import apolloFederation from '@apollo/federation';
 import { GraphQLRequest, WithRequired, GraphQLResponse, GraphQLRequestContext } from 'apollo-server-types';
 
-import { ServerMetadata, MetadataRouter, printWelcome, ServerType, logger, setLogger, createApolloLogger } from '@texo/server-common';
+import { ServerMetadata, MetadataRouter, printWelcome, ServerType, getSystemLogger, createApolloLogger, Logger, Loggers } from '@texo/server-common';
 
 import { GatewayServerOptions } from './gateway-server-options';
 import { GraphQLSchema } from 'graphql';
 import { IGraphQLModuleDefinition, IHttpGraphQLModuleDefinition, GraphQLModuleDefinitionType, ILocalGraphQLModuleDefinition, LocalGraphQLModuleDefinition } from './graphql-modules';
 import { URL } from 'url';
 import configurationSchema from './schemas/configuration';
-import { NamespacedLogger } from '@texo/logging';
 
 const { ApolloServer } = apollo;
 const { ApolloGateway, RemoteGraphQLDataSource, LocalGraphQLDataSource } = apolloGateway;
@@ -22,9 +21,10 @@ export class GatewayServer {
   private app: Koa;
   private metadata: ServerMetadata;
   private options: GatewayServerOptions
+  private logger: Logger;
 
-  constructor({ options, metadata, modules, rootLogger }: { options: GatewayServerOptions, metadata: ServerMetadata, modules: IGraphQLModuleDefinition[], rootLogger?: NamespacedLogger }) {
-    setLogger((rootLogger || logger).ns('TEXO'));
+  constructor({ options, metadata, modules }: { options: GatewayServerOptions, metadata: ServerMetadata, modules: IGraphQLModuleDefinition[] }) {
+    this.logger = Loggers.createChild({ parent: getSystemLogger(), namespace: 'TEXO' });
 
     this.options = options;
     this.metadata = { ...metadata, serverType: ServerType.GATEWAY_SERVER, texoVersion: '%{{TEXO_VERSION}}'}
@@ -62,7 +62,7 @@ export class GatewayServer {
       gateway,
       subscriptions: false,
       plugins: [
-        createApolloLogger(logger!)
+        createApolloLogger(this.logger)
       ]
     });
 

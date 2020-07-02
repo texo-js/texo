@@ -1,5 +1,5 @@
-export * from './namespaced-logger';
-export * from './namespace-filters';
-
-import winston from 'winston';
-export const { format, transports } = winston;
+export * from './logging';
+export * from './filters';
+export * from './namespace-set';
+ 
+export { Logger, format, transports } from 'winston';
