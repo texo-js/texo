@@ -1,6 +1,5 @@
 {
   "jest.pathToConfig": "./jest.config.js",
   "jest.pathToJest": "yarn test --",
-  "jest.enableSnapshotUpdateMessages": false,
-  "jest.showCoverageOnLoad": true
+  "jest.enableSnapshotUpdateMessages": false
 }

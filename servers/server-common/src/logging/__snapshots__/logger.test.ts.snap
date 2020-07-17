@@ -2,5 +2,6 @@
 
 exports[`logger The default console format rendering correctly formats the log output 1`] = `
 "2020-07-02T16:00:04.102Z [32minfo[39m [/level-2/level-2] hello
-{\\"something\\":\\"else\\"}"
+{\\"something\\":\\"else\\"}
+"
 `;

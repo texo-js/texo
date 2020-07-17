@@ -1,4 +1,6 @@
-import { Logger, createLogger as createWinstonLogger, LoggerOptions, transports, format } from 'winston';
+import winston, { Logger, LoggerOptions } from 'winston';
+
+const { createLogger: createWinstonLogger, transports, format } = winston;
 
 interface Metadata extends Record<string, any> {
   ns?: string;

@@ -17,6 +17,7 @@
 
   "references": [
     { "path": "../../common/logging" },
-    { "path": "../server-common" }
+    { "path": "../../common/configurer" },
+    { "path": "../server-common" }    
   ]
 }

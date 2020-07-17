@@ -1,4 +1,4 @@
-export interface IdentityGatekeeperServerOptions {
+export interface IdentityGatekeeperOptions {
   accessTokenKeys: KeyPairLocation;
   refreshTokenKeys: KeyPairLocation;
 }

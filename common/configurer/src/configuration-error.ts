@@ -1,3 +1,1 @@
-export class ConfigurationError extends Error {
-
-}
+export class ConfigurationError extends Error { }

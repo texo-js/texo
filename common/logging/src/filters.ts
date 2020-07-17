@@ -1,8 +1,11 @@
-import { LEVEL } from 'triple-beam';
+import tripleBeam from 'triple-beam';
+import winston from 'winston';
 import { TransformableInfo } from 'logform';
-import { config } from 'winston';
 
 import { NamespaceSet } from './namespace-set';
+
+const { LEVEL } = tripleBeam;
+const { config } = winston
 
 export interface LoggingLevels {
   [key: string]: number;

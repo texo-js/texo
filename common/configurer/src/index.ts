@@ -1,4 +1,5 @@
 export * from './configurer';
-export * from './configuration-mapper';
+export * from './configuration';
+export * from './options';
+export * from './settings';
 export * from './configuration-error';
-export * from './configuration-options';

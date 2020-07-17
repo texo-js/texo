@@ -12,7 +12,7 @@ namespace Defaults {
     format.timestamp(),
     format.colorize({ level: true, all: false, message: false }),
     format.metadata({ fillExcept: [ 'level', 'ns', 'timestamp', 'message' ] }),
-    format.printf(info => `${info.timestamp} ${info.level} [${info.ns}] ${info.message}${EOL}${JSON.stringify(info.metadata)}`)
+    format.printf(info => `${info.timestamp} ${info.level} [${info.ns}] ${info.message}${EOL}${JSON.stringify(info.metadata)}${EOL}`)
   );
 
   export function getDefaultLogger() : Logger {

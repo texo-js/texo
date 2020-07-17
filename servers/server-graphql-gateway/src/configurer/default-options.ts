@@ -1,12 +1,8 @@
-import { ConfigurationOptions, ValueType, DemandType } from '@texo/configurer';
+import { OptionsDescriptor, setting, Demand } from '@texo/configurer';
 
-import { OptionKeys } from './constants';
+import { GatewayServerOptions } from '../gateway-server-options';
+import { ValueType } from '@texo/configurer/lib/settings/value-type';
 
-export const DefaultOptions: ConfigurationOptions = {
-  [OptionKeys.ACCESS_TOKEN_JWKS_URL]: {
-    type: ValueType.PATH,
-    demand: DemandType.REQUIRED,
-    argName: 'access-token-jwks-url',
-    envName: 'TEXO_ACCESS_TOKEN_JWKS_URL'
-  }
+export const DefaultOptions: OptionsDescriptor<GatewayServerOptions> = {
+  accessTokenJwksUrl: setting({ type: ValueType.STRING, demand: Demand.REQUIRED, parameter: 'access-token-jwks-url', environment: 'TEXO_ACCESS_TOKEN_JWKS_URL' })
 };

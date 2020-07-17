@@ -1,9 +1,17 @@
-import { buildConfiguration } from '@texo/configurer';
+import { configure } from '@texo/configurer';
 
-import { DefaultConfigurationOptions } from './default-options';
-import { DefaultConfigurationMapper } from './default-mapper';
-import { IdentityGatekeeperServerOptions } from '../identity-gatekeeper-server-options';
+import { DefaultOptions } from './default-options';
+import { IdentityGatekeeperOptions } from '../identity-gatekeeper-options';
+import { Loggers, getSystemLogger } from '@texo/server-common';
 
-export async function getOptions() : Promise<IdentityGatekeeperServerOptions> {
-  return buildConfiguration(DefaultConfigurationOptions, new DefaultConfigurationMapper());
+export async function configurer() : Promise<IdentityGatekeeperOptions> {
+  const logger = Loggers.createChild({ parent: getSystemLogger(), namespace: 'configurer' });
+  
+  try {
+    return await configure(DefaultOptions);
+  }
+  catch (e) {
+    logger.error(e);
+    throw e;
+  }
 }
