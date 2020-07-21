@@ -1,5 +1,6 @@
 import { Logger, Loggers } from '@texo/logging';
-import { getSystemLogger, ServerMetadata, ServerType, printWelcome } from '@texo/server-common';
+import { ServerMetadata, ServerType, printWelcome } from '@texo/server-common';
+
 import Koa from 'koa'
 
 import { IdentityGatekeeperOptions } from "./identity-gatekeeper-options";
@@ -13,7 +14,7 @@ export class IdentityGatekeeperServer {
   private logger: Logger;
 
   constructor({ options, metadata }: { options: IdentityGatekeeperOptions, metadata: ServerMetadata }) {
-    this.logger = Loggers.createChild({ parent: getSystemLogger(), namespace: 'TEXO' });
+    this.logger = Loggers.createChild({ parent: Loggers.getSystem(), namespace: 'TEXO' });
 
     this.options = options;
     this.metadata = { ...metadata, serverType: ServerType.IDENTITY_GATEKEEPER, texoVersion: '%{{TEXO_VERSION}}' };

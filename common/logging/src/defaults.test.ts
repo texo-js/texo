@@ -1,20 +1,8 @@
-import { TransformableInfo } from 'logform';
+import { Defaults } from './defaults';
+import { TransformableInfo, Format } from 'logform';
 import { LEVEL, MESSAGE } from 'triple-beam';
-import { Format } from '@texo/logging';
 
-import { Loggers, getSystemLogger, setSystemLogger, Defaults } from './logger';
-import { stringify } from 'querystring';
-
-describe('logger', () => {
-  describe('the default logger can be managed', function () {
-    it('correctly manages the system logger', function () {
-        const logger = Loggers.create({ options: { level: 'info' } });
-        setSystemLogger(logger);
-
-        expect(getSystemLogger()).toBe(logger);
-    });
-  });
-
+describe('', () => {
   describe('The default console format rendering', () => {
     const format = Defaults.DefaultConsoleFormat;
     let timestamp: string, now: Date, spy: jest.SpyInstance;

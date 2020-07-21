@@ -28,7 +28,21 @@ namespace Loggers {
     logger.defaultMeta = { ...metadata, ns };
 
     return logger;
-  }  
+  }
+
+  let systemLogger = createNullLogger();
+
+  export function setSystem(logger: Logger) {
+    systemLogger = logger;
+  }
+
+  export function getSystem() {
+    return systemLogger;
+  }
+
+  function createNullLogger(): Logger {
+    return Loggers.create({ options: { level: 'debug', transports: [] } });
+  }
 }
 
 export { Loggers, LoggerOptions, transports, format }

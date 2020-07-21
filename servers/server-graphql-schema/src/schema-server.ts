@@ -5,7 +5,8 @@ import graphql, { GraphQLSchema } from 'graphql';
 import stringify from 'fast-json-stable-stringify';
 import { createHash } from 'crypto';
 
-import { ServerMetadata, MetadataRouter, printWelcome, ServerType, getSystemLogger, createApolloLogger, Logger, Loggers } from '@texo/server-common';
+import { Logger, Loggers } from '@texo/logging';
+import { ServerMetadata, MetadataRouter, printWelcome, ServerType, createApolloLogger } from '@texo/server-common';
 
 import { SchemaServerOptions } from './schema-server-options';
 import { GraphQLSchemaModule } from '.';
@@ -22,7 +23,7 @@ export class SchemaServer {
   private logger: Logger;
 
   constructor({ options, metadata, modules }: { options: SchemaServerOptions, metadata: ServerMetadata, modules: GraphQLSchemaModule[] }) {
-    this.logger = Loggers.createChild({ parent: getSystemLogger(), namespace: 'TEXO' });
+    this.logger = Loggers.createChild({ parent: Loggers.getSystem(), namespace: 'TEXO' });
 
     this.options = options;
     this.metadata = { ...metadata, serverType: ServerType.SCHEMA_SERVER, texoVersion: '%{{TEXO_VERSION}}' };

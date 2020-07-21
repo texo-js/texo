@@ -3,8 +3,8 @@ import apollo from 'apollo-server-koa';
 import apolloGateway, { GraphQLDataSource } from '@apollo/gateway';
 import apolloFederation from '@apollo/federation';
 import { GraphQLRequest, WithRequired, GraphQLResponse, GraphQLRequestContext } from 'apollo-server-types';
-
-import { ServerMetadata, MetadataRouter, printWelcome, ServerType, getSystemLogger, createApolloLogger, Logger, Loggers } from '@texo/server-common';
+import { Logger, Loggers } from '@texo/logging';
+import { ServerMetadata, MetadataRouter, printWelcome, ServerType, createApolloLogger } from '@texo/server-common';
 
 import { GatewayServerOptions } from './gateway-server-options';
 import { GraphQLSchema } from 'graphql';
@@ -24,7 +24,7 @@ export class GatewayServer {
   private logger: Logger;
 
   constructor({ options, metadata, modules }: { options: GatewayServerOptions, metadata: ServerMetadata, modules: IGraphQLModuleDefinition[] }) {
-    this.logger = Loggers.createChild({ parent: getSystemLogger(), namespace: 'TEXO' });
+    this.logger = Loggers.createChild({ parent: Loggers.getSystem(), namespace: 'TEXO' });
 
     this.options = options;
     this.metadata = { ...metadata, serverType: ServerType.GATEWAY_SERVER, texoVersion: '%{{TEXO_VERSION}}'}
