@@ -1,14 +1,16 @@
 import { Placeholder } from './placeholder';
+import { ExecutionContext } from '../resolvers';
+import { OptionsDescriptor } from '../options';
 
-export class ChildObjectPlaceholder<T extends Record<string, any>> extends Placeholder<T> {
-  #value: T;
+export class ChildObjectPlaceholder<T> extends Placeholder<T> {
+  #value: OptionsDescriptor<T>;
 
-  constructor(value: T) {
+  constructor(descriptor: OptionsDescriptor<T>) {
     super();
-    this.#value = value;
+    this.#value = descriptor;
   }
 
-  get value(): T {
-    return this.#value
+  execute(context: ExecutionContext): Promise<T> {
+    return context.resolveObject(this.#value);
   }
 }

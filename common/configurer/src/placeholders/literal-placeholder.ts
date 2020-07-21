@@ -1,4 +1,5 @@
 import { Placeholder } from './placeholder';
+import { ExecutionContext } from '../resolvers/execution-context';
 
 export class LiteralPlaceholder<T> extends Placeholder<T> {
   #value: T;
@@ -8,7 +9,7 @@ export class LiteralPlaceholder<T> extends Placeholder<T> {
     this.#value = value;
   }
 
-  get value(): T {
-    return this.#value
+  execute(context: ExecutionContext): Promise<T> {
+    return Promise.resolve(this.#value);
   }
 }

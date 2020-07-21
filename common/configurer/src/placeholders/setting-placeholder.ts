@@ -1,5 +1,6 @@
 import { Placeholder } from "./placeholder";
 import { Setting } from "../settings";
+import { ExecutionContext } from "../resolvers/execution-context";
 
 export class SettingPlaceholder<T> extends Placeholder<T> {
   #descriptor: Setting<T>;
@@ -9,7 +10,7 @@ export class SettingPlaceholder<T> extends Placeholder<T> {
     this.#descriptor = descriptor;
   }
 
-  get value(): Setting<T> {
-    return this.#descriptor;
-  }  
+  execute(context: ExecutionContext): Promise<T> {
+    return context.resolveSetting(this.#descriptor);
+  }
 }

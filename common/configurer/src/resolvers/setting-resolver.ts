@@ -3,7 +3,31 @@ import parser from 'yargs-parser';
 import { Setting, Demand } from '../settings';
 import { ConfigurationError } from '../configuration-error';
 import { ValueType } from '../settings/value-type';
-import { isNumber } from 'util';
+import { BatchProcessor, Item } from '../batch-processor';
+
+export class SettingResolver {
+  #batch: BatchProcessor<Setting<any>, any>;
+
+  constructor() {
+    this.#batch = new BatchProcessor(settingBatchExecutor);
+  }
+
+  resolve<T>(setting: Setting<T>): Promise<T> {
+    return this.#batch.enqueue(setting);
+  }
+}
+
+function settingBatchExecutor(items: Item<Setting<any>, any>[]) {
+
+  const values = resolveSettings(items.map(item => item.value));
+  
+  for (let i = 0; i < items.length; i++) {
+    const value = values[i];
+    const item = items[i];
+
+    item.resolve(value);
+  }
+}
 
 const parserConfiguration = {
   'camel-case-expansion': false,
@@ -14,7 +38,7 @@ const parserConfiguration = {
   'unknown-options-as-args': false
 };
 
-export function resolveSettings(settings: Setting<any>[]): any[] {
+function resolveSettings(settings: Setting<any>[]): any[] {
   const parameters = parser(process.argv.slice(2), {
     configuration: parserConfiguration
   });
@@ -55,7 +79,7 @@ function coerceValue(value: string, setting: Setting<any>): any {
       return value;
 
     case ValueType.NUMBER:
-      if (!isNumber(value)) {
+      if (!isFloat(value)) {
         throw new ConfigurationError(`The value '${value}' is not a valid number`);
       }
       return parseFloat(value);

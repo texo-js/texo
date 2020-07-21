@@ -1,8 +1,9 @@
 import { configure } from './configurer';
-import { literal, setting } from '../configuration';
+import { literal, setting, provider } from '../configuration';
 import { Demand } from '../settings';
 import { withArgv, withEnv, withArgvAndEnv } from '../test-helpers';
 import { ValueType } from '../settings/value-type';
+import { Provider } from '../provider';
 
 interface ExampleConfiguration {
   name?: string;
@@ -12,6 +13,21 @@ interface ExampleConfiguration {
 interface NestedConfiguration {
   color: string;
   child: ExampleConfiguration;
+}
+
+interface ThingOptions {
+  isWeird: boolean;
+}
+
+class ThingProvider {
+  constructor(options: ThingOptions) {
+
+  }
+}
+
+interface ExampleWithProvider {
+  name: string;
+  thing: ThingProvider;
 }
 
 describe('resolution of configuration placeholders', () => {
@@ -90,5 +106,28 @@ describe('resolution of configuration placeholders', () => {
 
       expect(configuration).toEqual({ color: 'green', child: { name: 'Claude', age: 93 } });
     });
+  });
+
+  it('populates providers', async () => {
+    interface ThingOptions {
+      isWeird: boolean;
+    }
+
+    interface Thing {
+      name: string;
+    }
+
+    class ThingProvider implements Provider<Thing, ThingOptions> {
+      provide(options: ThingOptions): Thing {
+        return { name: options.isWeird ? 'A Weird Thing' : 'A normal thing' };
+      }
+    }
+
+    const configuration = await configure<ExampleWithProvider>({
+      name: literal('Adam'),
+      thing: provider(new ThingProvider()).withOptions({ isWeird: literal(false) })
+    });
+
+    expect(configuration).toEqual({ name: 'Adam', thing: { name: 'A normal thing' } });
   });
 });

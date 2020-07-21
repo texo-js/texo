@@ -41,7 +41,6 @@ export class BatchProcessor<T, R> {
   }
 
   public enqueue(value: T) : Promise<R> {
-    console.log(`Enqueuing: ${value}`);
     if (this.#queue.length == 0) {
       process.nextTick(() => this.executeBatch());
     }
@@ -54,7 +53,6 @@ export class BatchProcessor<T, R> {
   }
 
   private executeBatch() {
-    console.log(`Executing batch`);
     const batch = this.#queue;
     this.#queue = [];
 
