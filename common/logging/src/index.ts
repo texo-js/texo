@@ -6,4 +6,4 @@ export * from './defaults';
 import winston, { Logger } from 'winston';
 
 export { Logger };
-export const { format, transports } = winston;
+export const { format: Formats, transports: Transports } = winston;
