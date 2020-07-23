@@ -1,12 +1,12 @@
 import { Placeholder } from './placeholder';
 import { OptionsDescriptor } from '../options';
-import { Provider } from '../provider';
+import { Provider, ConfigurableProvider } from '../provider';
 import { ExecutionContext } from '../resolvers/execution-context';
 
-type ProvidedType<T> = T extends Provider<infer R, any> ? R : never;
-type OptionsType<T> = T extends Provider<any, infer O> ? O : never;
+type ProvidedType<T> = T extends Provider<infer R> ? R : T extends ConfigurableProvider<infer R, any> ? R : never;
+type OptionsType<T> = T extends ConfigurableProvider<any, infer O> ? O : never;
 
-export class ProviderPlaceholder<T extends Provider<any, any>> extends Placeholder<ProvidedType<T>> {
+export class ProviderPlaceholder<T extends Provider<any> | ConfigurableProvider<any, any>> extends Placeholder<ProvidedType<T>> {
   #provider: T;
   #options?: OptionsDescriptor<OptionsType<T>>;
 

@@ -11,7 +11,7 @@ interface LoggerEx extends Logger {
 }
 
 namespace Loggers {
-  export function create({ options = {}, namespace } : { options?: LoggerOptions, namespace?: string } = {}) : Logger {
+  export function create({ options = {}, namespace = '' } : { options?: LoggerOptions, namespace?: string } = {}) : Logger {
     options.defaultMeta = { ns: namespace, ...(options.defaultMeta || {}) };
     const logger = createWinstonLogger(options);
     

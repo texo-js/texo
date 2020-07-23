@@ -1,33 +1,50 @@
-import { Defaults } from './defaults';
 import { TransformableInfo, Format } from 'logform';
 import { LEVEL, MESSAGE } from 'triple-beam';
+import { EOL } from 'os';
+import colors from 'colors/safe';
 
-describe('', () => {
-  describe('The default console format rendering', () => {
-    const format = Defaults.DefaultConsoleFormat;
-    let timestamp: string, now: Date, spy: jest.SpyInstance;
+import { Defaults } from './defaults';
 
-    beforeEach(() => {
-      timestamp = '2020-07-02T16:00:04.102Z';
-      now = new Date(timestamp);
+describe('@texo/logging', () => {
+  let timestamp: string, now: Date, spy: jest.SpyInstance;
 
-      spy = jest.spyOn<any, any>(global, 'Date').mockImplementationOnce(() => now);
-    });
+  beforeEach(() => {
+    timestamp = '2020-07-02T16:00:04.102Z';
+    now = new Date(timestamp);
 
-    afterEach(() => {
-      spy.mockRestore();
-    })
+    spy = jest.spyOn<any, any>(global, 'Date').mockImplementationOnce(() => now);
+  });
 
+  afterEach(() => {
+    spy.mockRestore();
+  });
+
+  describe('default console format', () => {  
     it('correctly formats the log output', () => {
+      const format = Defaults.DefaultConsoleFormat;
+
       const info = objectToInfo({
         level: 'info',
         message: 'hello',
-        ns: '/level-2/level-2',
+        ns: 'level-2/level-2',
         something: 'else'
       });
       
       const result = getTransformedMessage(format, info) as string;
-      expect(result).toMatchSnapshot();
+      expect(result).toBe(`2020-07-02T16:00:04.102Z ${colors.green('info')} [level-2/level-2] hello${EOL}{"something":"else"}`);
+    });
+  });
+
+  describe('default console logger', () => {
+    it('logs correctly to the console', () => {
+      const spy = jest.spyOn((global.console as any)._stdout, 'write').mockImplementation();
+
+      const logger = Defaults.createDefaultConsoleLogger('test');
+      logger.info('this is a test');
+      
+      expect(spy).toHaveBeenCalledWith(`2020-07-02T16:00:04.102Z ${colors.green('info')} [test] this is a test${EOL}{}${EOL}`);
+
+      spy.mockRestore();
     });
   });
 });

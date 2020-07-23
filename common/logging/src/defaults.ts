@@ -13,10 +13,10 @@ export namespace Defaults {
     format.timestamp(),
     format.colorize({ level: true, all: false, message: false }),
     format.metadata({ fillExcept: [ 'level', 'ns', 'timestamp', 'message' ] }),
-    format.printf(info => `${info.timestamp} ${info.level} [${info.ns}] ${info.message}${EOL}${JSON.stringify(info.metadata)}${EOL}`)
+    format.printf(info => `${info.timestamp} ${info.level} [${info.ns}] ${info.message}${EOL}${JSON.stringify(info.metadata)}`)
   );
 
-  function createDefaultConsoleLogger(): Logger {
-    return Loggers.create({ options: { level: 'debug', format: DefaultConsoleFormat, transports: transports.Console  } })
+  export function createDefaultConsoleLogger(namespace?: string): Logger {
+    return Loggers.create({ options: { level: 'debug', format: DefaultConsoleFormat, transports: new transports.Console() }, namespace })
   }
 }

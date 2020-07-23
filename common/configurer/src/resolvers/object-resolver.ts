@@ -17,7 +17,7 @@ export class ObjectResolver {
       tasks.push(task);
     });
 
-    return Promise.all(tasks).then(() => output as T);
+    return Promise.all(tasks).then(() => output as T, error => { throw error });
   }
 
   private derivePlaceholder(value: any, context: ExecutionContext): Placeholder<any> {

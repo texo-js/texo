@@ -25,7 +25,11 @@ function settingBatchExecutor(items: Item<Setting<any>, any>[]) {
     const value = values[i];
     const item = items[i];
 
-    item.resolve(value);
+    if (value instanceof Error) {
+      item.reject(value);
+    } else {
+      item.resolve(value);
+    }
   }
 }
 
@@ -43,12 +47,17 @@ function resolveSettings(settings: Setting<any>[]): any[] {
     configuration: parserConfiguration
   });
 
-  return settings.map(setting => coerceValue(getValue(setting, parameters), setting));
+  return settings.map(setting => {
+    try {
+      return coerceValue(getValue(setting, parameters), setting)
+    } catch (e) {
+      return e;
+    }
+  });
 }
 
 function getValue(setting: Setting<any>, parameters: Record<string, string>): any {
   const parameterValue = setting.parameter && parameters[setting.parameter];
-
   if (parameterValue) {
     return parameterValue;
   }
@@ -56,7 +65,7 @@ function getValue(setting: Setting<any>, parameters: Record<string, string>): an
   const environmentValue = setting.environment && process.env[setting.environment];
   if (environmentValue) {
     if (setting.type === ValueType.BOOLEAN) {
-      return Boolean(environmentValue) ? 'true' : 'false';
+      return environmentValue.toUpperCase() === 'TRUE' ? 'true' : 'false';
     }
     
     return environmentValue;
@@ -70,10 +79,23 @@ function getValue(setting: Setting<any>, parameters: Record<string, string>): an
     return undefined;
   }
 
-  throw new ConfigurationError('No value could be found for setting.');
+  throw new ConfigurationError(getMissingSettingErrorMessage(setting));
 }
 
-function coerceValue(value: string, setting: Setting<any>): any {
+function getMissingSettingErrorMessage(setting: Setting<any>): string {
+  const isBoth = (setting.parameter && setting.environment);
+  if (isBoth) {
+    return `A required setting was not provided. Either the configuration parameter '${setting.parameter}' or the environment variable '${setting.environment}' must be set.`;
+  }
+
+  if (setting.parameter) {
+    return `A required setting was not provided. The configuration parameter '${setting.parameter}' must be set.`;
+  }
+
+  return `A required setting was not provided. The environment variable '${setting.environment}' must be set.`;
+}
+
+function coerceValue(value: any, setting: Setting<any>): any {
   switch (setting.type) {
     case ValueType.STRING:
       return value;
@@ -91,7 +113,7 @@ function coerceValue(value: string, setting: Setting<any>): any {
       return parseInt(value, 10);
 
     case ValueType.BOOLEAN:
-      return (value === 'true');
+      return (value === true || value === 'true');
   }
 
   throw new ConfigurationError(`Unknown setting type '${setting.type}'`);
