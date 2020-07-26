@@ -14,7 +14,10 @@ export async function configure() : Promise<GatewayServerOptions> {
     return configuration;
   }
   catch (e) {
-    logger.error('error loading configuration', { error: e });
+    if (e instanceof Error) {
+      logger.error('error loading configuration', { error: { message: e.message } });
+    }
+    
     throw e;
   }
 }

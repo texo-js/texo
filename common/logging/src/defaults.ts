@@ -1,10 +1,11 @@
 import { Format } from "logform";
-import { format, Logger, transports } from "winston";
+import winston, { Logger } from "winston";
 import { Filters } from "./filters";
 import { NamespaceSet } from "./namespace-set";
 import { Loggers } from "./logging";
 import { EOL } from "os";
 
+const { format, transports } = winston;
 export namespace Defaults {
   export const DefaultNamespaceSet = new NamespaceSet();
 

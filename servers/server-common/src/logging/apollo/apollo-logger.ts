@@ -2,14 +2,22 @@ import { ApolloServerPlugin, GraphQLRequestContext, GraphQLServiceContext } from
 import { Logger, Loggers } from '@texo/logging'
 import { v4 as uuid } from 'uuid';
 
-export const APOLLO_NAMESPACE = 'APOLLO';
+export const APOLLO_NAMESPACE = 'apollo';
+
+function profile() {
+  const start = Date.now();
+
+  return () => {
+    return Date.now() - start;
+  }
+}
 
 export function createApolloLogger(parentLogger: Logger) : ApolloServerPlugin {
   const logger = Loggers.createChild({ parent: parentLogger, namespace: APOLLO_NAMESPACE });
 
   return {
     serverWillStart(service: GraphQLServiceContext) {
-      logger.info('starting Apollo Server', { schemaHash: service.schemaHash });
+      logger.info('starting apollo server', { schemaHash: service.schemaHash });
     },
 
     requestDidStart(ctx: GraphQLRequestContext) {
@@ -22,24 +30,24 @@ export function createApolloLogger(parentLogger: Logger) : ApolloServerPlugin {
       };
 
       logger.info('request started', metadata);
-      logger.profile('request');
+      const requestProfile = profile();
 
       return {
         parsingDidStart: (ctx: GraphQLRequestContext) => {
           logger.debug('parsing started', metadata);
-          logger.profile('parsing');
+          const parsingProfile = profile();
 
           return (err?: Error) => {
-            logger.profile('parsing', { ...metadata, message: 'parsing complete', level: 'debug' });
+            logger.debug('parsing complete', { ...metadata, duration: parsingProfile() });
           }
         },
 
         validationDidStart: (ctx: GraphQLRequestContext) => {
           logger.debug('validation started', metadata);
-          logger.profile('validation');
+          const validationProfile = profile();
 
           return (errs?: readonly Error[]) => {
-            logger.profile('validation', { ...metadata, message: 'validation complete', level: 'debug' });
+            logger.debug('validation complete', { ...metadata, duration: validationProfile() });
           }
         },
 
@@ -53,19 +61,19 @@ export function createApolloLogger(parentLogger: Logger) : ApolloServerPlugin {
 
         executionDidStart: (ctx: GraphQLRequestContext) => {
           logger.debug('execution started', metadata);
-          logger.profile('execution');
+          const executionProfile = profile();
 
           return (err?: Error) => {
-            logger.profile('execution', { ...metadata, message: 'execution complete', level: 'debug' });
+            logger.debug('execution complete', { ...metadata, duration: executionProfile() });
           }
         },
 
         willSendResponse: (ctx: GraphQLRequestContext) => {
-          logger.profile('request', { ...metadata, message: 'request complete', level: 'debug' });
+          logger.info('request complete', { ...metadata, duration: requestProfile() } );
         },
 
         didEncounterErrors: (ctx: GraphQLRequestContext) => {
-          logger.info('errors encountered', metadata);
+          logger.error('errors encountered', metadata);
         }
       }
     }
