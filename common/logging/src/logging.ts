@@ -1,4 +1,5 @@
 import winston, { Logger, LoggerOptions } from 'winston';
+import TransportStream from 'winston-transport';
 
 const { createLogger: createWinstonLogger, transports, format } = winston;
 
@@ -8,6 +9,23 @@ interface Metadata extends Record<string, any> {
 
 interface LoggerEx extends Logger {
   defaultMeta: Metadata | undefined;
+}
+
+class NullTransport extends TransportStream {
+  name: string;
+
+  constructor() {
+    super();
+
+    this.name = 'NullTransport';
+  }
+
+  log(...args: any[]) {
+    const callback = args[args.length - 1];
+    callback();
+
+    return this;
+  }
 }
 
 namespace Loggers {
@@ -41,7 +59,8 @@ namespace Loggers {
   }
 
   function createNullLogger(): Logger {
-    return Loggers.create({ options: { level: 'debug', transports: [] } });
+    const transport = new NullTransport();
+    return Loggers.create({ options: { level: 'debug', transports: [ transport ] } });
   }
 }
 
