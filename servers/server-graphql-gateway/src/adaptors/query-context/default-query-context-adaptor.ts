@@ -1,9 +1,10 @@
-import Koa from 'koa';
-import { AuthenticationError } from 'apollo-server-koa';
+import * as Apollo from 'apollo-server-koa';
 import { Logger, Loggers } from '@texo/logging';
 
 import { GatewayContext } from './gateway-context';
 import { QueryContextAdaptor, ContextBuilder, ContextArguments } from './query-context-adaptor';
+
+const { AuthenticationError } = Apollo;
 
 export interface DefaultQueryContextAdaptorOptions { }
 

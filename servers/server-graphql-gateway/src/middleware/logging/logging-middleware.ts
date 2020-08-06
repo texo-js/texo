@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import { Loggers } from '@texo/logging';
+import { Loggers, profiler } from '@texo/logging';
 
 export interface LoggingMiddleware {
   logging(): Koa.Middleware
@@ -19,13 +19,14 @@ export class DefaultLoggingMiddleware implements LoggingMiddleware {
       };
 
       logger.info('http request started', metadata);
+      const profile = profiler();
 
       try {
         await next();
       } catch (e) {
         logger.error(e, metadata);
       } finally {
-        logger.info('http request complete', metadata);
+        logger.info('http request complete', { ...metadata, duration: profile.duration() });
       }
     }
   }

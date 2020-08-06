@@ -1,15 +1,7 @@
 import { ApolloServerPlugin, GraphQLRequestContext, GraphQLServiceContext } from 'apollo-server-plugin-base';
-import { Logger, Loggers } from '@texo/logging'
+import { Logger, Loggers, profiler } from '@texo/logging'
 
 export const APOLLO_NAMESPACE = 'apollo';
-
-function profile() {
-  const start = Date.now();
-
-  return () => {
-    return Date.now() - start;
-  }
-}
 
 export function createApolloLogger(parentLogger: Logger) : ApolloServerPlugin {
   const logger = Loggers.createChild({ parent: parentLogger, namespace: APOLLO_NAMESPACE });
@@ -29,25 +21,25 @@ export function createApolloLogger(parentLogger: Logger) : ApolloServerPlugin {
         }
       };
 
-      logger.info('request started', metadata);
-      const requestProfile = profile();
+      logger.info('graphql request started', metadata);
+      const requestProfile = profiler();
 
       return {
         parsingDidStart: (ctx: GraphQLRequestContext) => {
           logger.debug('parsing started', metadata);
-          const parsingProfile = profile();
+          const parsingProfile = profiler();
 
           return (err?: Error) => {
-            logger.debug('parsing complete', { ...metadata, duration: parsingProfile() });
+            logger.debug('parsing complete', { ...metadata, duration: parsingProfile.duration() });
           }
         },
 
         validationDidStart: (ctx: GraphQLRequestContext) => {
           logger.debug('validation started', metadata);
-          const validationProfile = profile();
+          const validationProfile = profiler();
 
           return (errs?: readonly Error[]) => {
-            logger.debug('validation complete', { ...metadata, duration: validationProfile() });
+            logger.debug('validation complete', { ...metadata, duration: validationProfile.duration() });
           }
         },
 
@@ -61,19 +53,19 @@ export function createApolloLogger(parentLogger: Logger) : ApolloServerPlugin {
 
         executionDidStart: (ctx: GraphQLRequestContext) => {
           logger.debug('execution started', metadata);
-          const executionProfile = profile();
+          const executionProfile = profiler();
 
           return (err?: Error) => {
-            logger.debug('execution complete', { ...metadata, duration: executionProfile() });
+            logger.debug('execution complete', { ...metadata, duration: executionProfile.duration() });
           }
         },
 
         willSendResponse: (ctx: GraphQLRequestContext) => {
-          logger.info('request complete', { ...metadata, duration: requestProfile() } );
+          logger.info('graphql request complete', { ...metadata, duration: requestProfile.duration() } );
         },
 
         didEncounterErrors: (ctx: GraphQLRequestContext) => {
-          logger.error('errors encountered', metadata);
+          logger.error('graphql errors encountered', metadata);
         }
       }
     }
