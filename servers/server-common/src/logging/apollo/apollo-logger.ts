@@ -1,6 +1,5 @@
 import { ApolloServerPlugin, GraphQLRequestContext, GraphQLServiceContext } from 'apollo-server-plugin-base';
 import { Logger, Loggers } from '@texo/logging'
-import { v4 as uuid } from 'uuid';
 
 export const APOLLO_NAMESPACE = 'apollo';
 
@@ -21,7 +20,8 @@ export function createApolloLogger(parentLogger: Logger) : ApolloServerPlugin {
     },
 
     requestDidStart(ctx: GraphQLRequestContext) {
-      const correlationId = uuid();
+      
+      const correlationId = ctx.context.correlationId;
       const metadata = {
         correlationId,
         operation: {

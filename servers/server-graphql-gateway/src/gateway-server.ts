@@ -7,6 +7,9 @@ import { ServerMetadata, MetadataRouter, printWelcome, ServerType, createApolloL
 import { GatewayServerOptions } from './gateway-server-options';
 import { ServiceModuleDefinition, ServiceBuilderFactory, ServiceDefinitions } from './services';
 import ConfigurationSchema from './schemas/configuration';
+import { DefaultAuthorizationMiddleware } from './middleware/authorization';
+import { DefaultCorrelationIdMiddleware } from './middleware/correlation';
+import { DefaultLoggingMiddleware } from './middleware/logging';
 
 const { ApolloServer } = ApolloKoaModule;
 const { ApolloGateway } = ApolloGatewayModule;
@@ -14,40 +17,57 @@ const { ApolloGateway } = ApolloGatewayModule;
 
 export class GatewayServer {
 
-  private app: Koa;
-  private metadata: ServerMetadata;
-  private options: GatewayServerOptions
-  private logger: Logger;
+  #app: Koa;
+  #metadata: ServerMetadata;
+  #options: GatewayServerOptions
+  #logger: Logger;
 
   constructor({ options, metadata, modules }: { options: GatewayServerOptions, metadata: ServerMetadata, modules: ServiceModuleDefinition[] }) {
-    this.logger = Loggers.createChild({ parent: Loggers.getSystem(), namespace: 'texo' });
+    this.#logger = Loggers.namespace('texo');
 
-    this.options = options;
-    this.metadata = { ...metadata, serverType: ServerType.GATEWAY_SERVER, texoVersion: '%{{TEXO_VERSION}}'}
+    this.#options = options;
+    this.#metadata = { ...metadata, serverType: ServerType.GATEWAY_SERVER, texoVersion: '%{{TEXO_VERSION}}'}
 
-    this.app = new Koa();
+    this.#app = new Koa();
+
+    this.initialiseMiddleware();
     this.initialiseServices();
     this.initialiseGateway(modules);
 
-    printWelcome('Texo', this.metadata);
+    printWelcome('Texo', this.#metadata);
   }
 
   public listen(config: { port: number }) : void {
-    this.app.listen(config.port);
+    this.#app.listen(config.port);
+  }
+
+  private initialiseMiddleware(): void {
+    const app = this.#app;
+    const { authorizationAdaptor } = this.#options;
+
+    const correlation = new DefaultCorrelationIdMiddleware();
+    const logging = new DefaultLoggingMiddleware();
+    const authorization = new DefaultAuthorizationMiddleware({ adaptor: authorizationAdaptor });
+
+    app.use(correlation.track());
+    app.use(logging.logging());
+    app.use(authorization.authorize(this.#logger));
   }
 
   private initialiseServices() : void {
-    const app = this.app;
+    const app = this.#app;
 
-    const router = new MetadataRouter(this.metadata);
+    const router = new MetadataRouter(this.#metadata);
 
     app.use(router.routes())
     app.use(router.allowedMethods());
   }
 
   private initialiseGateway(modules: ServiceModuleDefinition[]) : void {
+    const app = this.#app;
+    const { queryContextAdaptor } = this.#options;
+
     const configurationSchema = new ServiceDefinitions.Local('configuration', 'local://configuration', ConfigurationSchema);
-    const app = this.app;
     const builder = new ServiceBuilderFactory([ configurationSchema, ...modules ]);
 
     const gateway = new ApolloGateway({
@@ -59,8 +79,9 @@ export class GatewayServer {
       gateway,
       subscriptions: false,
       plugins: [
-        createApolloLogger(this.logger)
-      ]
+        createApolloLogger(this.#logger)
+      ],
+      context: queryContextAdaptor.builder()
     });
 
     server.applyMiddleware({ app });

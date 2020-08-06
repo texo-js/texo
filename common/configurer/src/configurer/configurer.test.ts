@@ -1,9 +1,8 @@
 import { configure } from './configurer';
-import { literal, setting, provider } from '../configuration';
+import { literal, setting, construct, provider } from '../configuration';
 import { Demand } from '../settings';
 import { withArgv, withEnv, withArgvAndEnv } from '../test-helpers';
 import { ValueType } from '../settings/value-type';
-import { Provider, ConfigurableProvider } from '../provider';
 import { ConfigurationError } from '../configuration-error';
 
 interface ExampleConfiguration {
@@ -153,6 +152,54 @@ describe('@texo/configurer', () => {
     });
   });
 
+  describe('provide', () => {
+    it('creates provided classes', async () => {
+      class ProvidedThing {
+        #name: string;
+
+        constructor() {
+          this.#name = 'the-name'
+        }
+
+        get name() { return this.#name; }
+      }
+
+      interface PT {
+        thing: ProvidedThing
+      }
+
+      const result = await configure<PT>({
+        thing: construct(ProvidedThing)
+      });
+
+      expect(result.thing).toBeInstanceOf(ProvidedThing);
+      expect(result.thing.name).toBe('the-name');
+    });
+
+    it('creates configurable provided classes', async () => {
+      class ProvidedConfiguredThing {
+        #name: string;
+
+        constructor({ name }: { name: string }) {
+          this.#name = name;
+        }
+
+        get name() { return this.#name; }
+      }
+
+      interface PT {
+        thing: ProvidedConfiguredThing
+      }
+
+      const result = await configure<PT>({
+        thing: construct(ProvidedConfiguredThing).withOptions({ name: literal('configured-thing') })
+      });
+
+      expect(result.thing).toBeInstanceOf(ProvidedConfiguredThing);
+      expect(result.thing.name).toBe('configured-thing');
+    });
+  });
+
   describe('providers', () => {
     it('populates providers', async () => {
       interface ThingOptions {
@@ -163,15 +210,14 @@ describe('@texo/configurer', () => {
         name: string;
       }
 
-      class ThingProvider implements ConfigurableProvider<Thing, ThingOptions> {
-        provide(options: ThingOptions): Thing {
-          return { name: options.isWeird ? 'A Weird Thing' : 'A normal thing' };
-        }
+      const ThingProvider = (options: ThingOptions): Thing => {
+        return { name: options.isWeird ? 'A Weird Thing' : 'A normal thing' };
       }
+
 
       const configuration = await configure<ExampleWithProvider>({
         name: literal('Adam'),
-        thing: provider(new ThingProvider()).withOptions({ isWeird: literal(false) })
+        thing: provider(ThingProvider).withOptions({ isWeird: literal(false) })
       });
 
       expect(configuration).toEqual({ name: 'Adam', thing: { name: 'A normal thing' } });
@@ -182,15 +228,13 @@ describe('@texo/configurer', () => {
         name: string;
       }
 
-      class ThingProvider implements Provider<Thing> {
-        provide(): Thing {
-          return { name: 'set locally' };
-        }
+      const ThingProvider = (): Thing => {
+        return { name: 'set locally' };
       }
 
       const configuration = await configure<ExampleWithProvider>({
         name: literal('Adam'),
-        thing: provider(new ThingProvider())
+        thing: provider(ThingProvider)
       });
 
       expect(configuration).toEqual({ name: 'Adam', thing: { name: 'set locally' } });

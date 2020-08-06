@@ -29,18 +29,22 @@
     "url": "https://github.com/compile-this/texo/issues"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/koa": "^2.11.3"
   },
   "dependencies": {
     "@apollo/federation": "^0.16.0",
     "@apollo/gateway": "^0.16.0",
-    "@texo/server-common": "*",
     "@texo/configurer": "*",
+    "@texo/server-common": "*",
     "apollo-graphql": "^0.4.4",
     "apollo-server-koa": "^2.13.1",
     "apollo-server-types": "^0.4.0",
     "fast-json-stable-stringify": "^2.1.0",
     "graphql": "^14.0.0",
-    "graphql-tag": "^2.10.3"
+    "graphql-tag": "^2.10.3",
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^1.8.1",
+    "uuid": "^8.1.0"
   }
 }

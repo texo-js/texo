@@ -36,6 +36,20 @@ namespace Loggers {
     return logger;
   }
 
+  export function namespace(name: string, parent?: Logger) {
+    parent = parent || getSystem();
+
+    const logger = parent.child({}) as LoggerEx;
+
+    const metadata = logger.defaultMeta || {};
+    const nsRoot = metadata.ns;
+    const ns = nsRoot ? `${nsRoot}/${name}` : name;
+
+    logger.defaultMeta = { ...metadata, ns };
+
+    return logger;
+  }
+
   export function createChild({ parent, namespace } : { parent: Logger, namespace: string }) {
     const logger = parent.child({}) as LoggerEx;
 
